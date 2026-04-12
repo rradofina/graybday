@@ -407,39 +407,41 @@
     .btn-directions svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     /* ═══════ PHOTO GALLERY ═══════ */
+    .gallery-outer {
+      overflow: hidden;
+      margin: 0 -20px;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+      mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+    }
+
     .gallery-scroll {
       display: flex;
       gap: 12px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 8px;
-      margin: 0 -20px;
-      padding-left: 20px;
-      padding-right: 20px;
-      scrollbar-width: none;
+      width: max-content;
+      animation: marquee 30s linear infinite;
     }
-    .gallery-scroll::-webkit-scrollbar { display: none; }
+
+    .gallery-scroll:hover { animation-play-state: paused; }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
 
     .gallery-item {
       flex: 0 0 180px;
       height: 240px;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      scroll-snap-align: start;
       position: relative;
       border: 1px solid var(--card-border);
-      transition: transform 0.3s;
     }
-    .gallery-item:hover { transform: scale(1.02); }
 
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
     }
-    .gallery-item:hover img { transform: scale(1.08); }
 
     .gallery-item .photo-label {
       position: absolute;
@@ -782,38 +784,74 @@
   <!-- ═══════ PHOTOS ═══════ -->
   <section class="reveal">
     <div class="section-label">Gray through the years</div>
-    <div class="gallery-scroll">
-      <div class="gallery-item">
-        <img src="76932493_10157731148342436_3776031145225879552_n.jpg" alt="Baby Gray" loading="lazy">
-        <div class="photo-label">Baby Gray</div>
-      </div>
-      <div class="gallery-item">
-        <img src="87001061_620402665458238_3443355807545032704_n.jpg" alt="With Dad" loading="lazy">
-        <div class="photo-label">With Dad</div>
-      </div>
-      <div class="gallery-item">
-        <img src="101656005_2736089466497429_288387247261877414_n.jpg" alt="Little explorer" loading="lazy">
-        <div class="photo-label">Little explorer</div>
-      </div>
-      <div class="gallery-item">
-        <img src="605573386_18291989434263456_6715332140405636134_n.jpg" alt="Big brother" loading="lazy">
-        <div class="photo-label">Big brother</div>
-      </div>
-      <div class="gallery-item">
-        <img src="589906887_18293144593263456_6393825283211460723_n.jpg" alt="All smiles" loading="lazy">
-        <div class="photo-label">All smiles</div>
-      </div>
-      <div class="gallery-item">
-        <img src="468657573_18248043346263456_5308954243857195004_n.jpg" alt="Beach day" loading="lazy">
-        <div class="photo-label">Beach day</div>
-      </div>
-      <div class="gallery-item">
-        <img src="652013913_18301525141263456_9067539051817965902_n.jpg" alt="Future golfer" loading="lazy">
-        <div class="photo-label">Future golfer</div>
-      </div>
-      <div class="gallery-item">
-        <img src="657711982_18304198657263456_1157485011128523740_n.jpg" alt="Birthday boy" loading="lazy">
-        <div class="photo-label">Birthday boy</div>
+    <div class="gallery-outer">
+      <div class="gallery-scroll">
+        <!-- Set 1 -->
+        <div class="gallery-item">
+          <img src="76932493_10157731148342436_3776031145225879552_n.jpg" alt="Baby Gray" loading="lazy">
+          <div class="photo-label">Baby Gray</div>
+        </div>
+        <div class="gallery-item">
+          <img src="87001061_620402665458238_3443355807545032704_n.jpg" alt="With Dad" loading="lazy">
+          <div class="photo-label">With Dad</div>
+        </div>
+        <div class="gallery-item">
+          <img src="101656005_2736089466497429_288387247261877414_n.jpg" alt="Little explorer" loading="lazy">
+          <div class="photo-label">Little explorer</div>
+        </div>
+        <div class="gallery-item">
+          <img src="605573386_18291989434263456_6715332140405636134_n.jpg" alt="Big brother" loading="lazy">
+          <div class="photo-label">Big brother</div>
+        </div>
+        <div class="gallery-item">
+          <img src="589906887_18293144593263456_6393825283211460723_n.jpg" alt="All smiles" loading="lazy">
+          <div class="photo-label">All smiles</div>
+        </div>
+        <div class="gallery-item">
+          <img src="468657573_18248043346263456_5308954243857195004_n.jpg" alt="Beach day" loading="lazy">
+          <div class="photo-label">Beach day</div>
+        </div>
+        <div class="gallery-item">
+          <img src="652013913_18301525141263456_9067539051817965902_n.jpg" alt="Future golfer" loading="lazy">
+          <div class="photo-label">Future golfer</div>
+        </div>
+        <div class="gallery-item">
+          <img src="657711982_18304198657263456_1157485011128523740_n.jpg" alt="Birthday boy" loading="lazy">
+          <div class="photo-label">Birthday boy</div>
+        </div>
+        <!-- Set 2 (duplicate for seamless loop) -->
+        <div class="gallery-item">
+          <img src="76932493_10157731148342436_3776031145225879552_n.jpg" alt="Baby Gray" loading="lazy">
+          <div class="photo-label">Baby Gray</div>
+        </div>
+        <div class="gallery-item">
+          <img src="87001061_620402665458238_3443355807545032704_n.jpg" alt="With Dad" loading="lazy">
+          <div class="photo-label">With Dad</div>
+        </div>
+        <div class="gallery-item">
+          <img src="101656005_2736089466497429_288387247261877414_n.jpg" alt="Little explorer" loading="lazy">
+          <div class="photo-label">Little explorer</div>
+        </div>
+        <div class="gallery-item">
+          <img src="605573386_18291989434263456_6715332140405636134_n.jpg" alt="Big brother" loading="lazy">
+          <div class="photo-label">Big brother</div>
+        </div>
+        <div class="gallery-item">
+          <img src="589906887_18293144593263456_6393825283211460723_n.jpg" alt="All smiles" loading="lazy">
+          <div class="photo-label">All smiles</div>
+        </div>
+        <div class="gallery-item">
+          <img src="468657573_18248043346263456_5308954243857195004_n.jpg" alt="Beach day" loading="lazy">
+          <div class="photo-label">Beach day</div>
+        </div>
+        <div class="gallery-item">
+          <img src="652013913_18301525141263456_9067539051817965902_n.jpg" alt="Future golfer" loading="lazy">
+          <div class="photo-label">Future golfer</div>
+        </div>
+        <div class="gallery-item">
+          <img src="657711982_18304198657263456_1157485011128523740_n.jpg" alt="Birthday boy" loading="lazy">
+          <div class="photo-label">Birthday boy</div>
+        </div>
       </div>
     </div>
   </section>
