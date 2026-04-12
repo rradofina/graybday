@@ -650,6 +650,150 @@
       to { opacity: 1; transform: scale(1); }
     }
 
+    /* ═══════ ADMIN ═══════ */
+    .admin-toggle {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 50;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--card-border);
+      color: #3f3f46;
+      font-size: 1rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s;
+    }
+    .admin-toggle:hover { background: rgba(255,255,255,0.1); color: var(--muted-fg); }
+
+    .admin-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .admin-modal.open { display: flex; }
+
+    .admin-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: popIn 0.3s ease;
+    }
+
+    .admin-box h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+    .admin-close:hover { color: var(--text); }
+
+    .admin-login .form-group { margin-bottom: 16px; }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .admin-table th {
+      text-align: left;
+      padding: 10px 8px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--card-border);
+      white-space: nowrap;
+    }
+
+    .admin-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    .admin-table tr:last-child td { border-bottom: none; }
+
+    .admin-table .att-yes { color: #4ade80; font-weight: 600; }
+    .admin-table .att-no { color: #f87171; font-weight: 600; }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .admin-stat {
+      text-align: center;
+      padding: 12px 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+    }
+
+    .admin-stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .admin-stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .admin-empty {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .admin-loading {
+      text-align: center;
+      padding: 32px;
+      color: var(--muted);
+    }
+
+    .admin-loading .spinner {
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
     /* ═══════ FOOTER ═══════ */
     .footer {
       text-align: center;
@@ -943,6 +1087,41 @@
   <footer class="footer">Made with love for Gray's 7th birthday</footer>
 </div>
 
+<!-- Admin toggle button -->
+<button class="admin-toggle" id="admin-btn" title="Admin">&#128274;</button>
+
+<!-- Admin modal -->
+<div class="admin-modal" id="admin-modal">
+  <div class="admin-box">
+    <h2>
+      <span>RSVP Admin</span>
+      <button class="admin-close" id="admin-close">&times;</button>
+    </h2>
+
+    <!-- Login form -->
+    <div class="admin-login" id="admin-login">
+      <div class="form-group">
+        <label>Username</label>
+        <input class="form-input" type="text" id="admin-user" placeholder="Username" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input class="form-input" type="password" id="admin-pass" placeholder="Password">
+      </div>
+      <button class="btn-submit" id="admin-login-btn" type="button" style="margin-top:0">
+        Log In
+      </button>
+      <div class="form-error" id="admin-error">Wrong username or password.</div>
+    </div>
+
+    <!-- Data view (hidden until login) -->
+    <div id="admin-data" style="display:none">
+      <div class="admin-stats" id="admin-stats"></div>
+      <div id="admin-table-wrap"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── Starfield ── */
 (function () {
@@ -994,22 +1173,9 @@
 document.getElementById('att-y').addEventListener('change', () => document.getElementById('gf').classList.add('open'));
 document.getElementById('att-n').addEventListener('change', () => document.getElementById('gf').classList.remove('open'));
 
-/* ── RSVP → Google Sheets ── */
-/*
- * HOW THIS WORKS:
- * The form submits to a Google Apps Script web app that writes to a Google Sheet.
- *
- * SETUP (takes 3 minutes):
- * 1. Go to https://sheets.google.com and create a new spreadsheet
- * 2. Name it "Gray's Birthday RSVP"
- * 3. Add headers in Row 1: Timestamp | Name | Attending | Adults | Kids | Child | Message
- * 4. Go to Extensions → Apps Script
- * 5. Replace the code with the script from GOOGLE_APPS_SCRIPT.js (in this folder)
- * 6. Click Deploy → New deployment → Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 7. Copy the deployment URL and paste it below (replace the placeholder)
- */
+/* ══════════════════════════════════════
+   RSVP → Google Sheets (fixed POST)
+   ══════════════════════════════════════ */
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_m1pj-6ZFHNR0XQnMi9RHj8LFdaXFc5uPEZ0ZuQclj_5NJaKTgcROn6dy-dAuryIj/exec';
 
 document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
@@ -1025,7 +1191,6 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
   const spinner = document.getElementById('spinner');
   const errorEl = document.getElementById('form-error');
 
-  // Loading state
   btn.disabled = true;
   btnText.textContent = 'Sending...';
   spinner.style.display = 'block';
@@ -1042,18 +1207,11 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
   };
 
   try {
-    if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycby_m1pj-6ZFHNR0XQnMi9RHj8LFdaXFc5uPEZ0ZuQclj_5NJaKTgcROn6dy-dAuryIj/exec') {
-      // Demo mode — no script URL set yet. Show success anyway so you can preview.
-      await new Promise(r => setTimeout(r, 800));
-    } else {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-    }
-
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(data)
+    });
     this.style.display = 'none';
     document.getElementById('success').classList.add('show');
   } catch (err) {
@@ -1063,6 +1221,145 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
     errorEl.classList.add('show');
   }
 });
+
+/* ══════════════════════════════════════
+   ADMIN PANEL
+   ══════════════════════════════════════ */
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'gray2026';
+const SHEET_ID = '1CSkj987uHz8MKeoK28HazYuMgs1m4cm48F5I0GNjoa0';
+
+// Open / close modal
+document.getElementById('admin-btn').addEventListener('click', () => {
+  document.getElementById('admin-modal').classList.add('open');
+});
+document.getElementById('admin-close').addEventListener('click', () => {
+  document.getElementById('admin-modal').classList.remove('open');
+});
+document.getElementById('admin-modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+// Login
+document.getElementById('admin-login-btn').addEventListener('click', doAdminLogin);
+document.getElementById('admin-pass').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') doAdminLogin();
+});
+
+function doAdminLogin() {
+  const user = document.getElementById('admin-user').value.trim();
+  const pass = document.getElementById('admin-pass').value;
+
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-data').style.display = 'block';
+    document.getElementById('admin-error').classList.remove('show');
+    loadRSVPs();
+  } else {
+    document.getElementById('admin-error').classList.add('show');
+  }
+}
+
+// Fetch and render RSVPs from the public Google Sheet
+async function loadRSVPs() {
+  const wrap = document.getElementById('admin-table-wrap');
+  wrap.innerHTML = '<div class="admin-loading"><div class="spinner" style="display:inline-block"></div><br>Loading RSVPs...</div>';
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    const res = await fetch(url);
+    const text = await res.text();
+    // Response is wrapped in google.visualization.Query.setResponse({...})
+    const json = JSON.parse(text.match(/\{.*\}/s)[0]);
+
+    const cols = json.table.cols.map(c => c.label || '');
+    const rows = json.table.rows || [];
+
+    if (rows.length === 0) {
+      wrap.innerHTML = '<div class="admin-empty">No RSVPs yet. Share the link!</div>';
+      document.getElementById('admin-stats').innerHTML = '';
+      return;
+    }
+
+    // Parse rows into data
+    const rsvps = rows.map(r => {
+      const vals = r.c.map(cell => (cell && cell.v != null) ? String(cell.v) : '-');
+      return {
+        timestamp: vals[0] || '-',
+        name: vals[1] || '-',
+        attending: vals[2] || '-',
+        adults: vals[3] || '-',
+        kids: vals[4] || '-',
+        child: vals[5] || '-',
+        message: vals[6] || '-'
+      };
+    });
+
+    // Calculate stats
+    const attending = rsvps.filter(r => r.attending.toLowerCase() === 'yes');
+    const declined = rsvps.filter(r => r.attending.toLowerCase() === 'no');
+    let totalAdults = 0;
+    let totalKids = 0;
+    attending.forEach(r => {
+      const a = parseInt(r.adults);
+      const k = parseInt(r.kids);
+      if (!isNaN(a)) totalAdults += a;
+      if (!isNaN(k)) totalKids += k;
+    });
+    const totalGuests = totalAdults + totalKids;
+
+    // Render stats
+    document.getElementById('admin-stats').innerHTML = `
+      <div class="admin-stat">
+        <div class="admin-stat-num" style="color:#4ade80">${attending.length}</div>
+        <div class="admin-stat-label">Attending</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num" style="color:#f87171">${declined.length}</div>
+        <div class="admin-stat-label">Declined</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num" style="color:var(--gold)">${rsvps.length}</div>
+        <div class="admin-stat-label">Total RSVPs</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num" style="color:var(--accent-light)">${totalAdults}</div>
+        <div class="admin-stat-label">Adults</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num" style="color:#60a5fa">${totalKids}</div>
+        <div class="admin-stat-label">Kids</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num">${totalGuests}</div>
+        <div class="admin-stat-label">Total Guests</div>
+      </div>
+    `;
+
+    // Render table
+    let html = '<table class="admin-table"><thead><tr>';
+    html += '<th>Name</th><th>RSVP</th><th>Adults</th><th>Kids</th><th>Child</th><th>Message</th>';
+    html += '</tr></thead><tbody>';
+
+    rsvps.forEach(r => {
+      const cls = r.attending.toLowerCase() === 'yes' ? 'att-yes' : 'att-no';
+      const label = r.attending.toLowerCase() === 'yes' ? 'Yes' : 'No';
+      html += `<tr>
+        <td style="font-weight:500;color:var(--text);white-space:nowrap">${r.name}</td>
+        <td class="${cls}">${label}</td>
+        <td>${r.adults}</td>
+        <td>${r.kids}</td>
+        <td>${r.child}</td>
+        <td style="max-width:120px">${r.message}</td>
+      </tr>`;
+    });
+
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  } catch (err) {
+    wrap.innerHTML = '<div class="admin-empty">Could not load data. Make sure the Google Sheet is shared as "Anyone with the link can view".</div>';
+  }
+}
 
 /* ── Scroll reveal ── */
 (function () {

@@ -8,13 +8,8 @@
  * 1. Create a new Google Sheet at https://sheets.google.com
  *    - Name it: "Gray's Birthday RSVP"
  *    - In Row 1, add these headers:
- *      A1: Timestamp
- *      B1: Name
- *      C1: Attending
- *      D1: Adults
- *      E1: Kids
- *      F1: Child Name/Age
- *      G1: Message
+ *      A1: Timestamp | B1: Name | C1: Attending | D1: Adults
+ *      E1: Kids | F1: Child Name/Age | G1: Message
  *
  * 2. Go to Extensions → Apps Script
  *
@@ -27,11 +22,10 @@
  *    - Who has access: Anyone
  *    - Click Deploy
  *
- * 5. Copy the Web app URL (looks like https://script.google.com/macros/s/XXXXX/exec)
+ * 5. Copy the Web app URL
  *
- * 6. Open index.html and replace YOUR_GOOGLE_APPS_SCRIPT_URL_HERE with that URL
- *
- * Done! RSVPs will now appear in your Google Sheet automatically.
+ * IMPORTANT: If you update this script, you must create a
+ * NEW deployment (Deploy → New deployment), not just save.
  * ═══════════════════════════════════════════════════════════
  */
 
