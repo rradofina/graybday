@@ -717,7 +717,13 @@
 
     .admin-login .form-group { margin-bottom: 16px; }
 
+    .admin-table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .admin-table {
+      min-width: 500px;
       width: 100%;
       border-collapse: collapse;
       font-size: 0.8rem;
@@ -1337,7 +1343,7 @@ async function loadRSVPs() {
     `;
 
     // Render table
-    let html = '<table class="admin-table"><thead><tr>';
+    let html = '<div class="admin-table-scroll"><table class="admin-table"><thead><tr>';
     html += '<th>Name</th><th>RSVP</th><th>Adults</th><th>Kids</th><th>Child</th><th>Message</th>';
     html += '</tr></thead><tbody>';
 
@@ -1349,12 +1355,12 @@ async function loadRSVPs() {
         <td class="${cls}">${label}</td>
         <td>${r.adults}</td>
         <td>${r.kids}</td>
-        <td>${r.child}</td>
-        <td style="max-width:120px">${r.message}</td>
+        <td style="white-space:nowrap">${r.child}</td>
+        <td style="min-width:100px">${r.message}</td>
       </tr>`;
     });
 
-    html += '</tbody></table>';
+    html += '</tbody></table></div>';
     wrap.innerHTML = html;
   } catch (err) {
     wrap.innerHTML = '<div class="admin-empty">Could not load data. Make sure the Google Sheet is shared as "Anyone with the link can view".</div>';
