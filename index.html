@@ -972,7 +972,7 @@ document.getElementById('att-n').addEventListener('change', () => document.getEl
  *    - Who has access: Anyone
  * 7. Copy the deployment URL and paste it below (replace the placeholder)
  */
-const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_m1pj-6ZFHNR0XQnMi9RHj8LFdaXFc5uPEZ0ZuQclj_5NJaKTgcROn6dy-dAuryIj/exec';
 
 document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
   e.preventDefault();
@@ -1004,7 +1004,7 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
   };
 
   try {
-    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+    if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycby_m1pj-6ZFHNR0XQnMi9RHj8LFdaXFc5uPEZ0ZuQclj_5NJaKTgcROn6dy-dAuryIj/exec') {
       // Demo mode — no script URL set yet. Show success anyway so you can preview.
       await new Promise(r => setTimeout(r, 800));
     } else {
