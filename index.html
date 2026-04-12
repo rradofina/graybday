@@ -1519,7 +1519,6 @@ async function loadRSVPs() {
     rsvps.forEach((r, i) => {
       const cls = r.attending.toLowerCase() === 'yes' ? 'att-yes' : 'att-no';
       const label = r.attending.toLowerCase() === 'yes' ? 'Yes' : 'No';
-      const sheetRow = i + 2; // row 1 is header
       html += `<tr>
         <td style="font-weight:500;color:var(--text);white-space:nowrap">${r.name}</td>
         <td class="${cls}">${label}</td>
@@ -1527,7 +1526,7 @@ async function loadRSVPs() {
         <td>${r.kids}</td>
         <td style="white-space:nowrap">${r.child}</td>
         <td style="min-width:100px">${r.message}</td>
-        <td><button class="btn-delete" onclick="confirmDelete(${sheetRow}, '${r.name.replace(/'/g, "\\'")}', '${label}', '${r.adults}', '${r.kids}')">Delete</button></td>
+        <td><button class="btn-delete" data-name="${r.name}" data-attending="${r.attending}" data-adults="${r.adults}" data-kids="${r.kids}" onclick="confirmDelete(this)">Delete</button></td>
       </tr>`;
     });
 
@@ -1541,34 +1540,39 @@ async function loadRSVPs() {
 /* ══════════════════════════════════════
    DELETE RSVP
    ══════════════════════════════════════ */
-let pendingDeleteRow = null;
+let pendingDelete = null;
 
-function confirmDelete(row, name, attending, adults, kids) {
-  pendingDeleteRow = row;
+function confirmDelete(btn) {
+  pendingDelete = {
+    name: btn.dataset.name,
+    attending: btn.dataset.attending,
+    adults: btn.dataset.adults,
+    kids: btn.dataset.kids
+  };
   const details = document.getElementById('delete-details');
   details.innerHTML = `
-    <strong>Name:</strong> ${name}<br>
-    <strong>Attending:</strong> ${attending}<br>
-    <strong>Adults:</strong> ${adults}<br>
-    <strong>Kids:</strong> ${kids}
+    <strong>Name:</strong> ${pendingDelete.name}<br>
+    <strong>Attending:</strong> ${pendingDelete.attending}<br>
+    <strong>Adults:</strong> ${pendingDelete.adults}<br>
+    <strong>Kids:</strong> ${pendingDelete.kids}
   `;
   document.getElementById('delete-modal').classList.add('open');
 }
 
 document.getElementById('delete-cancel').addEventListener('click', () => {
   document.getElementById('delete-modal').classList.remove('open');
-  pendingDeleteRow = null;
+  pendingDelete = null;
 });
 
 document.getElementById('delete-modal').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) {
     e.currentTarget.classList.remove('open');
-    pendingDeleteRow = null;
+    pendingDelete = null;
   }
 });
 
 document.getElementById('delete-confirm').addEventListener('click', async () => {
-  if (!pendingDeleteRow) return;
+  if (!pendingDelete) return;
 
   const btn = document.getElementById('delete-confirm');
   btn.disabled = true;
@@ -1578,13 +1582,18 @@ document.getElementById('delete-confirm').addEventListener('click', async () => 
     await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      body: JSON.stringify({ action: 'delete', row: pendingDeleteRow })
+      body: JSON.stringify({
+        action: 'delete',
+        name: pendingDelete.name,
+        attending: pendingDelete.attending,
+        adults: pendingDelete.adults,
+        kids: pendingDelete.kids
+      })
     });
 
-    // Brief delay for sheet to update then reload
     await new Promise(r => setTimeout(r, 1500));
     document.getElementById('delete-modal').classList.remove('open');
-    pendingDeleteRow = null;
+    pendingDelete = null;
     btn.disabled = false;
     btn.textContent = 'Delete';
     loadRSVPs();
