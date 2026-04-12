@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gray's Space Adventure — 7th Birthday</title>
+  <meta name="description" content="You're invited to Gray's 7th birthday party! RSVP here.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #09090b;
+      --card: #0c0c10;
+      --card-border: rgba(255,255,255,0.06);
+      --card-hover: rgba(255,255,255,0.03);
+      --muted: #71717a;
+      --muted-fg: #a1a1aa;
+      --text: #fafafa;
+      --text-secondary: #d4d4d8;
+      --accent: #7c3aed;
+      --accent-light: #a78bfa;
+      --gold: #fbbf24;
+      --gold-soft: #fde68a;
+      --ring: rgba(124,58,237,0.4);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════ SPACE BACKGROUND ═══════ */
+    .space-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .space-bg canvas { width: 100%; height: 100%; }
+
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .nebula-1 { width: 600px; height: 600px; background: #7c3aed; top: -10%; right: -10%; }
+    .nebula-2 { width: 500px; height: 500px; background: #2563eb; bottom: 20%; left: -15%; }
+    .nebula-3 { width: 400px; height: 400px; background: #7c3aed; bottom: -10%; right: 10%; opacity: 0.08; }
+
+    /* ═══════ LAYOUT ═══════ */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    section { padding: 28px 0; }
+
+    .sep {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--muted), transparent);
+      margin: 0 auto;
+    }
+
+    /* ═══════ HERO ═══════ */
+    .hero {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px 0 40px;
+      position: relative;
+    }
+
+    .hero-video-wrap {
+      width: 100%;
+      max-width: 380px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(124,58,237,0.2);
+      box-shadow: 0 0 80px rgba(124,58,237,0.1), 0 4px 40px rgba(0,0,0,0.5);
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-video-wrap video {
+      width: 100%;
+      display: block;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 16px;
+      animation: fadeUp 0.8s ease 0.15s both;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.2rem, 9vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-title .name {
+      display: block;
+      font-size: clamp(3rem, 13vw, 4.8rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold) 0%, #f59e0b 40%, var(--gold-soft) 60%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeUp 0.8s ease 0.2s both, shimmer 4s linear infinite;
+      filter: drop-shadow(0 0 40px rgba(251,191,36,0.15));
+    }
+
+    @keyframes shimmer { to { background-position: 200% center; } }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted-fg);
+      margin-top: 8px;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+    .hero-sub strong { color: var(--gold); font-weight: 600; }
+
+    /* ── Details strip under hero ── */
+    .hero-details {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 24px;
+      animation: fadeUp 0.8s ease 0.35s both;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .hero-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .hero-detail-row .icon { font-size: 1rem; flex-shrink: 0; }
+    .hero-detail-row strong { color: var(--gold); font-weight: 600; }
+
+    /* ── CTA button ── */
+    .btn-rsvp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      padding: 16px 40px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      animation: fadeUp 0.8s ease 0.45s both;
+    }
+
+    .btn-rsvp:hover {
+      background: #6d28d9;
+      box-shadow: 0 0 0 3px var(--ring), 0 8px 30px rgba(124,58,237,0.3);
+      transform: translateY(-2px);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #3f3f46;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeUp 0.8s ease 0.6s both;
+    }
+
+    .scroll-hint .chevron {
+      width: 16px; height: 16px;
+      border-right: 1.5px solid #3f3f46;
+      border-bottom: 1.5px solid #3f3f46;
+      transform: rotate(45deg);
+      animation: bounce-down 1.8s ease-in-out infinite;
+    }
+
+    @keyframes bounce-down {
+      0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.5; }
+      50% { transform: rotate(45deg) translateY(4px); opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════ CARDS ═══════ */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 28px 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .card-header-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.15);
+    }
+
+    .card-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ═══════ COUNTDOWN ═══════ */
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .cd-block {
+      text-align: center;
+      padding: 16px 4px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+    }
+
+    .cd-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cd-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ═══════ EVENT DETAILS ═══════ */
+    .detail-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+    .detail-item:hover { background: var(--card-hover); }
+
+    .detail-item-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      flex-shrink: 0;
+    }
+
+    .detail-item-content { flex: 1; }
+
+    .detail-item-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .detail-item-value {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .detail-item-value .gold { color: var(--gold); font-weight: 700; }
+    .detail-item-value small { display: block; font-size: 0.8rem; color: var(--muted-fg); font-weight: 400; }
+
+    /* ═══════ MAP ═══════ */
+    .map-wrap {
+      margin-top: 16px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      aspect-ratio: 16/9;
+    }
+
+    .map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      filter: invert(90%) hue-rotate(180deg) saturate(0.5) brightness(0.7) contrast(1.2);
+    }
+
+    .btn-directions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-directions:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+
+    .btn-directions svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ═══════ PHOTO GALLERY ═══════ */
+    .gallery-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      margin: 0 -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      scrollbar-width: none;
+    }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+
+    .gallery-item {
+      flex: 0 0 180px;
+      height: 240px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      scroll-snap-align: start;
+      position: relative;
+      border: 1px solid var(--card-border);
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover { transform: scale(1.02); }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+
+    .gallery-item .photo-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 24px 12px 10px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ═══════ RSVP FORM ═══════ */
+    .rsvp-section .card {
+      border-color: rgba(124,58,237,0.12);
+    }
+
+    .rsvp-deadline {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted-fg);
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .rsvp-deadline strong { color: #fb923c; font-weight: 600; }
+
+    .form-group { margin-bottom: 20px; }
+
+    .form-group label:not(.att-label) {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+    .form-input::placeholder { color: #3f3f46; }
+
+    select.form-input {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    select.form-input option { background: #18181b; color: var(--text); }
+    textarea.form-input { resize: vertical; min-height: 72px; }
+
+    .att-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .att-option { position: relative; }
+    .att-option input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .att-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted-fg);
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+    .att-label:hover { border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
+
+    .att-option input:checked + .att-label.att-yes {
+      border-color: rgba(34,197,94,0.4);
+      background: rgba(34,197,94,0.08);
+      color: #4ade80;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.1);
+    }
+    .att-option input:checked + .att-label.att-no {
+      border-color: rgba(239,68,68,0.4);
+      background: rgba(239,68,68,0.08);
+      color: #f87171;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+
+    .guest-fields {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease, opacity 0.25s;
+      opacity: 0;
+    }
+    .guest-fields.open { grid-template-rows: 1fr; opacity: 1; }
+    .guest-fields-inner { overflow: hidden; }
+
+    .guest-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-submit:hover {
+      background: #6d28d9;
+      box-shadow: 0 0 0 3px var(--ring);
+      transform: translateY(-1px);
+    }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-submit svg { width: 18px; height: 18px; }
+
+    /* Spinner */
+    .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Success */
+    .success-overlay {
+      display: none;
+      text-align: center;
+      padding: 32px 16px;
+      animation: popIn 0.4s ease;
+    }
+    .success-overlay.show { display: block; }
+
+    .success-overlay .check-circle {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(34,197,94,0.1);
+      border: 2px solid rgba(34,197,94,0.3);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      font-size: 1.6rem;
+    }
+    .success-overlay h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #4ade80;
+    }
+    .success-overlay p { font-size: 0.85rem; color: var(--muted-fg); line-height: 1.6; }
+
+    /* Error */
+    .form-error {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      color: #f87171;
+      text-align: center;
+    }
+    .form-error.show { display: block; }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ═══════ FOOTER ═══════ */
+    .footer {
+      text-align: center;
+      padding: 40px 0 32px;
+      font-size: 0.72rem;
+      color: #3f3f46;
+    }
+
+    /* ═══════ SCROLL REVEAL ═══════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="space-bg"><canvas id="starfield"></canvas></div>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<div class="page">
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero">
+    <!-- Video -->
+    <div class="hero-video-wrap">
+      <video autoplay muted loop playsinline>
+        <source src="6cec6fdd-8a8f-4103-912e-eb4829601dfa.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="hero-eyebrow">You're invited</div>
+    <h1 class="hero-title">
+      <span class="name">Gray's</span>
+      Space Adventure
+    </h1>
+    <p class="hero-sub">Join his <strong>7th trip around the sun</strong></p>
+
+    <!-- Quick details -->
+    <div class="hero-details">
+      <div class="hero-detail-row">
+        <span class="icon">&#128197;</span>
+        <span><strong>May 30, 2026</strong> &middot; Saturday</span>
+      </div>
+      <div class="hero-detail-row">
+        <span class="icon">&#128336;</span>
+        <span>1:30 PM &mdash; 6:00 PM</span>
+      </div>
+      <div class="hero-detail-row">
+        <span class="icon">&#128205;</span>
+        <span>Le Pavilion Event Hall, Macapagal Ave</span>
+      </div>
+    </div>
+
+    <a href="#rsvp" class="btn-rsvp">RSVP Now</a>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="chevron"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ COUNTDOWN ═══════ -->
+  <section class="reveal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon">&#128640;</div>
+        <h2>Countdown to Launch</h2>
+      </div>
+      <div class="countdown-grid">
+        <div class="cd-block"><div class="cd-num" id="c-d">--</div><div class="cd-label">Days</div></div>
+        <div class="cd-block"><div class="cd-num" id="c-h">--</div><div class="cd-label">Hours</div></div>
+        <div class="cd-block"><div class="cd-num" id="c-m">--</div><div class="cd-label">Min</div></div>
+        <div class="cd-block"><div class="cd-num" id="c-s">--</div><div class="cd-label">Sec</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ VENUE & MAP ═══════ -->
+  <section class="reveal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon">&#128205;</div>
+        <h2>Venue</h2>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-item-icon">&#127965;</div>
+          <div class="detail-item-content">
+            <div class="detail-item-label">Location</div>
+            <div class="detail-item-value">Le Pavilion Event Hall <small>Macapagal Avenue, EDSA, Pasay City</small></div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-icon">&#128197;</div>
+          <div class="detail-item-content">
+            <div class="detail-item-label">Date & Time</div>
+            <div class="detail-item-value"><span class="gold">May 30, 2026</span> <small>1:30 PM &mdash; 6:00 PM</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map embed -->
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.8!2d120.9868!3d14.5336!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cbf0b4b1b1b1%3A0x1234567890abcdef!2sLe+Pavilion+Event+Hall!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Le Pavilion Event Hall Map"
+        ></iframe>
+      </div>
+
+      <a
+        href="https://www.google.com/maps/search/Le+Pavilion+Event+Hall+Macapagal+Avenue+EDSA+Pasay+City"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-directions"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Open in Google Maps
+      </a>
+    </div>
+  </section>
+
+  <div class="sep reveal"></div>
+
+  <!-- ═══════ PHOTOS ═══════ -->
+  <section class="reveal">
+    <div class="section-label">Gray through the years</div>
+    <div class="gallery-scroll">
+      <div class="gallery-item">
+        <img src="76932493_10157731148342436_3776031145225879552_n.jpg" alt="Baby Gray" loading="lazy">
+        <div class="photo-label">Baby Gray</div>
+      </div>
+      <div class="gallery-item">
+        <img src="87001061_620402665458238_3443355807545032704_n.jpg" alt="With Dad" loading="lazy">
+        <div class="photo-label">With Dad</div>
+      </div>
+      <div class="gallery-item">
+        <img src="101656005_2736089466497429_288387247261877414_n.jpg" alt="Little explorer" loading="lazy">
+        <div class="photo-label">Little explorer</div>
+      </div>
+      <div class="gallery-item">
+        <img src="605573386_18291989434263456_6715332140405636134_n.jpg" alt="Big brother" loading="lazy">
+        <div class="photo-label">Big brother</div>
+      </div>
+      <div class="gallery-item">
+        <img src="589906887_18293144593263456_6393825283211460723_n.jpg" alt="All smiles" loading="lazy">
+        <div class="photo-label">All smiles</div>
+      </div>
+      <div class="gallery-item">
+        <img src="468657573_18248043346263456_5308954243857195004_n.jpg" alt="Beach day" loading="lazy">
+        <div class="photo-label">Beach day</div>
+      </div>
+      <div class="gallery-item">
+        <img src="652013913_18301525141263456_9067539051817965902_n.jpg" alt="Future golfer" loading="lazy">
+        <div class="photo-label">Future golfer</div>
+      </div>
+      <div class="gallery-item">
+        <img src="657711982_18304198657263456_1157485011128523740_n.jpg" alt="Birthday boy" loading="lazy">
+        <div class="photo-label">Birthday boy</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep reveal"></div>
+
+  <!-- ═══════ RSVP FORM ═══════ -->
+  <section class="rsvp-section reveal" id="rsvp">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon">&#9993;&#65039;</div>
+        <h2>RSVP</h2>
+      </div>
+      <p class="rsvp-deadline">Please respond by <strong>April 23, 2026</strong></p>
+
+      <form id="rsvp-form" autocomplete="off">
+        <div class="form-group">
+          <label>Will you be joining us?</label>
+          <div class="att-toggle">
+            <div class="att-option">
+              <input type="radio" name="att" id="att-y" value="Yes" required>
+              <label for="att-y" class="att-label att-yes">Yes, we'll be there!</label>
+            </div>
+            <div class="att-option">
+              <input type="radio" name="att" id="att-n" value="No">
+              <label for="att-n" class="att-label att-no">Can't make it</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="f-name">Your Name</label>
+          <input class="form-input" type="text" id="f-name" placeholder="e.g. Maria Santos" required>
+        </div>
+
+        <div class="guest-fields" id="gf">
+          <div class="guest-fields-inner">
+            <div class="guest-row" style="margin-bottom:20px">
+              <div class="form-group" style="margin-bottom:0">
+                <label for="f-adults">Adults</label>
+                <select class="form-input" id="f-adults">
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5+</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label for="f-kids">Kids</label>
+                <select class="form-input" id="f-kids">
+                  <option value="0">0</option>
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4+</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="f-child">Child's Name & Age <span style="color:var(--muted)">(optional)</span></label>
+              <input class="form-input" type="text" id="f-child" placeholder="e.g. Sofia, 6 years old">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="f-msg">Message for Gray <span style="color:var(--muted)">(optional)</span></label>
+          <textarea class="form-input" id="f-msg" placeholder="Happy birthday, Gray!"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4z"/></svg>
+          <span id="btn-text">Send RSVP</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+
+        <div class="form-error" id="form-error">Something went wrong. Please try again or text/call 09175134133.</div>
+      </form>
+
+      <div class="success-overlay" id="success">
+        <div class="check-circle">&#10003;</div>
+        <h3>RSVP Received!</h3>
+        <p>Thank you for responding.<br>See you at Gray's Space Adventure!</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">Made with love for Gray's 7th birthday</footer>
+</div>
+
+<script>
+/* ── Starfield ── */
+(function () {
+  const c = document.getElementById('starfield');
+  const ctx = c.getContext('2d');
+  let stars = [];
+  function resize() { c.width = window.innerWidth; c.height = window.innerHeight; init(); }
+  function init() {
+    stars = [];
+    const n = Math.floor((c.width * c.height) / 4500);
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * c.width, y: Math.random() * c.height,
+        r: Math.random() * 1.2 + 0.3, a: Math.random(),
+        da: (Math.random() - 0.5) * 0.008
+      });
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const s of stars) {
+      s.a += s.da;
+      if (s.a > 1 || s.a < 0.15) s.da *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+
+/* ── Countdown ── */
+(function () {
+  const t = new Date('2026-05-30T13:30:00+08:00').getTime();
+  function tick() {
+    const diff = Math.max(0, t - Date.now());
+    document.getElementById('c-d').textContent = Math.floor(diff / 864e5);
+    document.getElementById('c-h').textContent = String(Math.floor((diff % 864e5) / 36e5)).padStart(2, '0');
+    document.getElementById('c-m').textContent = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, '0');
+    document.getElementById('c-s').textContent = String(Math.floor((diff % 6e4) / 1e3)).padStart(2, '0');
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+/* ── Attendance toggle ── */
+document.getElementById('att-y').addEventListener('change', () => document.getElementById('gf').classList.add('open'));
+document.getElementById('att-n').addEventListener('change', () => document.getElementById('gf').classList.remove('open'));
+
+/* ── RSVP → Google Sheets ── */
+/*
+ * HOW THIS WORKS:
+ * The form submits to a Google Apps Script web app that writes to a Google Sheet.
+ *
+ * SETUP (takes 3 minutes):
+ * 1. Go to https://sheets.google.com and create a new spreadsheet
+ * 2. Name it "Gray's Birthday RSVP"
+ * 3. Add headers in Row 1: Timestamp | Name | Attending | Adults | Kids | Child | Message
+ * 4. Go to Extensions → Apps Script
+ * 5. Replace the code with the script from GOOGLE_APPS_SCRIPT.js (in this folder)
+ * 6. Click Deploy → New deployment → Web app
+ *    - Execute as: Me
+ *    - Who has access: Anyone
+ * 7. Copy the deployment URL and paste it below (replace the placeholder)
+ */
+const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const att = document.querySelector('input[name="att"]:checked');
+  if (!att) return;
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) return;
+
+  const btn = document.getElementById('submit-btn');
+  const btnText = document.getElementById('btn-text');
+  const spinner = document.getElementById('spinner');
+  const errorEl = document.getElementById('form-error');
+
+  // Loading state
+  btn.disabled = true;
+  btnText.textContent = 'Sending...';
+  spinner.style.display = 'block';
+  errorEl.classList.remove('show');
+
+  const yes = att.value === 'Yes';
+  const data = {
+    name: name,
+    attending: att.value,
+    adults: yes ? document.getElementById('f-adults').value : '-',
+    kids: yes ? document.getElementById('f-kids').value : '-',
+    child: yes ? (document.getElementById('f-child').value.trim() || '-') : '-',
+    message: document.getElementById('f-msg').value.trim() || '-'
+  };
+
+  try {
+    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+      // Demo mode — no script URL set yet. Show success anyway so you can preview.
+      await new Promise(r => setTimeout(r, 800));
+    } else {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    }
+
+    this.style.display = 'none';
+    document.getElementById('success').classList.add('show');
+  } catch (err) {
+    btn.disabled = false;
+    btnText.textContent = 'Send RSVP';
+    spinner.style.display = 'none';
+    errorEl.classList.add('show');
+  }
+});
+
+/* ── Scroll reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }),
+    { threshold: 0.12 }
+  );
+  els.forEach(el => obs.observe(el));
+})();
+</script>
+</body>
+</html>
