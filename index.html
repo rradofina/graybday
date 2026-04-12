@@ -1441,7 +1441,7 @@ async function loadRSVPs() {
   wrap.innerHTML = '<div class="admin-loading"><div class="spinner" style="display:inline-block"></div><br>Loading RSVPs...</div>';
 
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=RSVPs`;
     const res = await fetch(url);
     const text = await res.text();
     // Response is wrapped in google.visualization.Query.setResponse({...})
