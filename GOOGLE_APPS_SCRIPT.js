@@ -26,6 +26,7 @@
  *
  * IMPORTANT: If you update this script, you must create a
  * NEW deployment (Deploy → New deployment), not just save.
+ * Then update the URL in index.html if it changed.
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -34,6 +35,21 @@ function doPost(e) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var data = JSON.parse(e.postData.contents);
 
+    // Delete action
+    if (data.action === 'delete' && data.row) {
+      var row = parseInt(data.row);
+      if (row >= 2 && row <= sheet.getLastRow()) {
+        sheet.deleteRow(row);
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: 'ok', action: 'deleted' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'error', message: 'Invalid row' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Default: add RSVP
     sheet.appendRow([
       new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
       data.name || '',
