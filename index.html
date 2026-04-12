@@ -1404,10 +1404,7 @@ const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'gray2026';
 const SHEET_ID = '1CSkj987uHz8MKeoK28HazYuMgs1m4cm48F5I0GNjoa0';
 
-// Open / close modal
-document.getElementById('admin-btn').addEventListener('click', () => {
-  document.getElementById('admin-modal').classList.add('open');
-});
+// Close modal
 document.getElementById('admin-close').addEventListener('click', () => {
   document.getElementById('admin-modal').classList.remove('open');
 });
@@ -1415,7 +1412,7 @@ document.getElementById('admin-modal').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
 });
 
-// Login
+// Login — auto-login if previously authenticated
 document.getElementById('admin-login-btn').addEventListener('click', doAdminLogin);
 document.getElementById('admin-pass').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') doAdminLogin();
@@ -1426,14 +1423,27 @@ function doAdminLogin() {
   const pass = document.getElementById('admin-pass').value;
 
   if (user === ADMIN_USER && pass === ADMIN_PASS) {
-    document.getElementById('admin-login').style.display = 'none';
-    document.getElementById('admin-data').style.display = 'block';
-    document.getElementById('admin-error').classList.remove('show');
-    loadRSVPs();
+    localStorage.setItem('graybday_admin', 'true');
+    showAdminData();
   } else {
     document.getElementById('admin-error').classList.add('show');
   }
 }
+
+function showAdminData() {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-data').style.display = 'block';
+  document.getElementById('admin-error').classList.remove('show');
+  loadRSVPs();
+}
+
+// Auto-login on open if previously logged in
+document.getElementById('admin-btn').addEventListener('click', () => {
+  document.getElementById('admin-modal').classList.add('open');
+  if (localStorage.getItem('graybday_admin') === 'true') {
+    showAdminData();
+  }
+}, { once: false });
 
 // Fetch and render RSVPs from the public Google Sheet
 async function loadRSVPs() {
