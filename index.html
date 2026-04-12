@@ -92,6 +92,7 @@
     }
 
     .hero-video-wrap {
+      position: relative;
       width: 100%;
       max-width: 380px;
       border-radius: var(--radius-xl);
@@ -106,6 +107,24 @@
       width: 100%;
       display: block;
     }
+
+    .video-unmute {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .video-unmute:hover { background: rgba(0,0,0,0.8); border-color: rgba(255,255,255,0.3); }
+    .video-unmute svg { width: 16px; height: 16px; }
 
     .hero-eyebrow {
       display: inline-flex;
@@ -830,9 +849,13 @@
   <section class="hero">
     <!-- Video -->
     <div class="hero-video-wrap">
-      <video controls playsinline>
+      <video id="hero-video" autoplay muted loop playsinline>
         <source src="6cec6fdd-8a8f-4103-912e-eb4829601dfa.mp4" type="video/mp4">
       </video>
+      <button class="video-unmute" id="unmute-btn" title="Unmute">
+        <svg id="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        <svg id="icon-unmuted" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      </button>
     </div>
 
     <div class="hero-eyebrow">You're invited</div>
@@ -1366,6 +1389,18 @@ async function loadRSVPs() {
     wrap.innerHTML = '<div class="admin-empty">Could not load data. Make sure the Google Sheet is shared as "Anyone with the link can view".</div>';
   }
 }
+
+/* ── Video unmute toggle ── */
+const video = document.getElementById('hero-video');
+const unmuteBtn = document.getElementById('unmute-btn');
+const iconMuted = document.getElementById('icon-muted');
+const iconUnmuted = document.getElementById('icon-unmuted');
+
+unmuteBtn.addEventListener('click', () => {
+  video.muted = !video.muted;
+  iconMuted.style.display = video.muted ? 'block' : 'none';
+  iconUnmuted.style.display = video.muted ? 'none' : 'block';
+});
 
 /* ── Scroll reveal ── */
 (function () {
