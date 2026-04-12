@@ -1312,15 +1312,15 @@ async function loadRSVPs() {
     document.getElementById('admin-stats').innerHTML = `
       <div class="admin-stat">
         <div class="admin-stat-num" style="color:#4ade80">${attending.length}</div>
-        <div class="admin-stat-label">Attending</div>
+        <div class="admin-stat-label">Groups Going</div>
       </div>
       <div class="admin-stat">
         <div class="admin-stat-num" style="color:#f87171">${declined.length}</div>
         <div class="admin-stat-label">Declined</div>
       </div>
       <div class="admin-stat">
-        <div class="admin-stat-num" style="color:var(--gold)">${rsvps.length}</div>
-        <div class="admin-stat-label">Total RSVPs</div>
+        <div class="admin-stat-num" style="color:var(--gold)">${totalGuests}</div>
+        <div class="admin-stat-label">Total Guests</div>
       </div>
       <div class="admin-stat">
         <div class="admin-stat-num" style="color:var(--accent-light)">${totalAdults}</div>
@@ -1331,8 +1331,8 @@ async function loadRSVPs() {
         <div class="admin-stat-label">Kids</div>
       </div>
       <div class="admin-stat">
-        <div class="admin-stat-num">${totalGuests}</div>
-        <div class="admin-stat-label">Total Guests</div>
+        <div class="admin-stat-num">${rsvps.length}</div>
+        <div class="admin-stat-label">Responses</div>
       </div>
     `;
 
